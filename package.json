@@ -2,7 +2,7 @@
   "name": "gremlin-ide",
   "version": "0.1.0",
   "description": "A development IDE for Tinkerpop enabled graph databases",
-  "author": "Phillip Barbiero",
+  "author": "Dave Bechberger",
   "homepage": "http://practicalgraph.com",
   "license": "MIT",
   "main": "main.js",
