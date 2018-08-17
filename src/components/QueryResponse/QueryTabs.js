@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import ResponseJson from './ResponseJson'
 import ResponseGrid from './ResponseGrid';
+import NodeChart from './NodeChart';
 
 function TabContainer(props) {
     return (
@@ -24,6 +25,8 @@ const styles = theme => ({
     root: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
+        height: "100vh",
+
     },
 });
 
@@ -41,7 +44,6 @@ class QueryTabs extends React.Component {
 
     componentWillReceiveProps(prevProps) {
         if (prevProps !== this.props) {
-            console.log(prevProps.results);
             this.setState({ results: prevProps.results });
         }
     }
@@ -65,7 +67,7 @@ class QueryTabs extends React.Component {
                 </AppBar>
                 {value === 0 && <TabContainer><ResponseGrid results={this.state.results} /></TabContainer>}
                 {value === 1 && <TabContainer><ResponseJson results={this.state.results} /></TabContainer>}
-                {value === 2 && <TabContainer>Item Three</TabContainer>}
+                {value === 2 && <TabContainer><NodeChart results={this.state.results} /></TabContainer>}
             </div>
         );
     }

@@ -58,7 +58,6 @@ class Layout extends Component {
 
     handleSubmit(event) {
         var result = ipcRenderer.sendSync("query:execute", this.state.query);
-        console.log(JSON.parse(result));
         this.setState({ results: result })
     }
 
