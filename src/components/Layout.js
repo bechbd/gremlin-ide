@@ -50,10 +50,17 @@ class Layout extends Component {
         }
         this.handleChanges = this.handleChanges.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
     }
 
     handleChanges(event) {
         this.setState({ query: event.currentTarget.value })
+    }
+
+    handleKeyPress(e) {
+        if (e.key == "Enter" && e.shiftKey) {
+            this.handleSubmit(e);
+        }
     }
 
     handleSubmit(event) {
@@ -86,7 +93,7 @@ class Layout extends Component {
                     <div className={classes.toolbar} />
                     <TextField
                         id="multiline-static"
-                        label="Multiline"
+                        label="Query"
                         multiline
                         rows="4"
                         defaultValue="g.V()"
@@ -94,6 +101,7 @@ class Layout extends Component {
                         margin="normal"
                         fullWidth
                         onChange={this.handleChanges}
+                        onKeyPress={this.handleKeyPress}
                     />
                     <Button variant="contained" color="primary" className={classes.button} onClick={this.handleSubmit}>
                         Submit
