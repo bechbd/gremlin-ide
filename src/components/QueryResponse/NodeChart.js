@@ -5,8 +5,10 @@ import Graph from 'react-graph-vis';
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
+        height: "calc(100vh - 390px)",
+        overflow: "auto",
         backgroundColor: theme.palette.background.paper,
+        border: "solid 1px #cccccc"
     },
 });
 
@@ -14,11 +16,6 @@ class NodeChart extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            nodes: [],
-            edges: [],
-            results: []
-        }
     }
 
     parseResults(props) {
@@ -66,6 +63,7 @@ class NodeChart extends React.Component {
     }
 
     render() {
+        const { classes } = this.props;
         var graph = this.parseResults(this.props);
         var options = {
             layout: {
@@ -82,7 +80,7 @@ class NodeChart extends React.Component {
             }
         }
         return (
-            <div>
+            <div className={classes.root}>
                 <Graph graph={graph} options={options} events={events} />
             </div>
         );

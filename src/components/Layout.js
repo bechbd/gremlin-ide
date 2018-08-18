@@ -19,10 +19,9 @@ const styles = theme => ({
         flexGrow: 1,
         height: "99vh",
         zIndex: 1,
-        overflow: 'hidden',
+        // overflow: 'hidden',
         position: 'relative',
         display: 'flex'
-
     },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
@@ -31,8 +30,13 @@ const styles = theme => ({
         position: 'relative',
         width: drawerWidth,
     },
+    queryBox: {
+        flex: "0 1 184px"
+    },
+    queryTabs: {
+    },
     content: {
-        flexGrow: 1,
+        flex: "1 1 auto",
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing.unit * 3,
         minWidth: 0, // So the Typography noWrap works
@@ -76,7 +80,7 @@ class Layout extends Component {
                     <Toolbar>
                         <Typography variant="title" color="inherit" noWrap>
                             Gremlin IDE
-                </Typography>
+                        </Typography>
                     </Toolbar>
                 </AppBar>
                 <Drawer
@@ -91,25 +95,27 @@ class Layout extends Component {
                 </Drawer>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
-                    <TextField
-                        id="multiline-static"
-                        label="Query"
-                        multiline
-                        rows="4"
-                        defaultValue="g.V()"
-                        className={classes.textField}
-                        margin="normal"
-                        fullWidth
-                        onChange={this.handleChanges}
-                        onKeyPress={this.handleKeyPress}
-                    />
-                    <Button variant="contained" color="primary" className={classes.button} onClick={this.handleSubmit}>
-                        Submit
+                    <div className={classes.queryBox}>
+                        <TextField
+                            id="multiline-static"
+                            label="Query"
+                            multiline
+                            rows="4"
+                            defaultValue="g.V()"
+                            className={classes.textField}
+                            margin="normal"
+                            fullWidth
+                            onChange={this.handleChanges}
+                            onKeyPress={this.handleKeyPress}
+                        />
+                        <Button variant="contained" color="primary" className={classes.button} onClick={this.handleSubmit}>
+                            Submit
                     </Button>
-                    <br />
-                    <br />
-                    <Divider />
-                    <QueryTabs results={this.state.results} />
+                        <br />
+                        <br />
+                        <Divider />
+                    </div>
+                    <QueryTabs className={classes.queryTabs} results={this.state.results} />
                 </main>
             </div>
         );

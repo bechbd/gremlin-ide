@@ -6,8 +6,9 @@ import ReactTable from "react-table"
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
-        backgroundColor: theme.palette.background.paper,
+        height: "calc(100vh - 390px)",
+        overflow: "auto",
+        backgroundColor: theme.palette.background.paper
     },
 });
 
@@ -34,8 +35,11 @@ class ResponseGrid extends React.Component {
     }
 
     render() {
+        const { classes } = this.props;
+        var rows = [];
+        var data = parseResults(this.props, this, rows);
         return (
-            <div>
+            <div className={classes.root}>
                 <ReactTable
                     data={this.state.results}
                     columns={this.state.columns}
@@ -53,9 +57,15 @@ ResponseGrid.propTypes = {
 export default withStyles(styles)(ResponseGrid);
 
 function parseResults(d, _this, rows) {
+    var rows = [];
+    var cols = []
+    var arr = [];
+
     if (d instanceof Array) {
         d.forEach((r) => {
-            parseResults(r, _this, rows);
+            var results = parseResults(r, _this, rows);
+            rows.push(results.rows);
+            cols.push(results.columns);
         });
     } else {
         var arr = [];
@@ -95,6 +105,7 @@ function parseResults(d, _this, rows) {
             }
         });
         rows.push(row);
-        _this.setState({ columns: cols });
+        //_this.setState({ columns: cols });
+        return { rows: rows, columns: cols };
     }
 }

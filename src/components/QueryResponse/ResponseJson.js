@@ -5,7 +5,8 @@ import ReactJson from 'react-json-view';
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
+        height: "calc(100vh - 390px)",
+        overflow: "auto",
         backgroundColor: theme.palette.background.paper,
     },
 });
@@ -17,8 +18,9 @@ class ResponseJson extends React.Component {
     }
 
     render() {
+        const { classes } = this.props;
         return (
-            <div>
+            <div className={classes.root}>
                 <ReactJson src={this.props.results} />
             </div>
         );

@@ -23,11 +23,12 @@ TabContainer.propTypes = {
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
-        height: "100vh",
-
+        height: "calc(100vh - 300px)"
     },
+    container: {
+        overflow: "scroll"
+    }
 });
 
 class QueryTabs extends React.Component {
@@ -65,9 +66,9 @@ class QueryTabs extends React.Component {
                         <Tab label="Node Chart" href="#basic-tabs" />
                     </Tabs>
                 </AppBar>
-                {value === 0 && <TabContainer><ResponseGrid results={this.state.results} /></TabContainer>}
-                {value === 1 && <TabContainer><ResponseJson results={this.state.results} /></TabContainer>}
-                {value === 2 && <TabContainer><NodeChart results={this.state.results} /></TabContainer>}
+                {value === 0 && <TabContainer className={classes.container}><ResponseGrid results={this.state.results} /></TabContainer>}
+                {value === 1 && <TabContainer className={classes.container}><ResponseJson results={this.state.results} /></TabContainer>}
+                {value === 2 && <TabContainer className={classes.container}><NodeChart results={this.state.results} /></TabContainer>}
             </div>
         );
     }
