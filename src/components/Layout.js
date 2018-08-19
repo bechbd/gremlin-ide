@@ -11,6 +11,8 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import QueryTabs from './QueryResponse/QueryTabs';
 import ErrorBar from './QueryResponse/ErrorBar';
+import MainMenu from './MainMenu';
+import ConnectionSetup from './ConnectionSetup';
 const { ipcRenderer } = require('electron')
 
 const drawerWidth = 240;
@@ -20,7 +22,6 @@ const styles = theme => ({
         flexGrow: 1,
         height: "99vh",
         zIndex: 1,
-        // overflow: 'hidden',
         position: 'relative',
         display: 'flex'
     },
@@ -43,6 +44,14 @@ const styles = theme => ({
         minWidth: 0, // So the Typography noWrap works
     },
     toolbar: theme.mixins.toolbar,
+    menuButton: {
+        marginLeft: -12,
+        marginRight: 20,
+    },
+    gremlinIcon: {
+        height: 48,
+        padding: 5,
+    },
 });
 
 class Layout extends Component {
@@ -53,11 +62,13 @@ class Layout extends Component {
             query: "g.V()",
             results: null,
             isError: false,
-            error: null
+            error: null,
+            showSetupConnection: false,
         }
         this.handleChanges = this.handleChanges.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.onMenuSelected = this.onMenuSelected.bind(this);
     }
 
     handleChanges(event) {
@@ -72,7 +83,11 @@ class Layout extends Component {
 
     handleSubmit(event) {
         var result = ipcRenderer.sendSync("query:execute", this.state.query);
-        this.setState({ results: result.results, isError: result.isError, error: result.error })
+        this.setState({ results: result.results, isError: result.isError, error: result.error, showSetupConnection: false })
+    }
+
+    onMenuSelected(target) {
+        this.setState({ showSetupConnection: true });
     }
 
     render() {
@@ -81,9 +96,12 @@ class Layout extends Component {
             <div className={classes.root}>
                 <AppBar position="absolute" className={classes.appBar}>
                     <Toolbar>
-                        <Typography variant="title" color="inherit" noWrap>
+                        <img src={require('../assets/img/gremlin-character.png')} className={classes.gremlinIcon} />
+                        <Typography variant="title" color="inherit" noWrap style={{ flex: 1 }}>
                             Gremlin IDE
                         </Typography>
+
+                        <MainMenu onSelected={this.onMenuSelected} />
                     </Toolbar>
                 </AppBar>
                 <main className={classes.content}>
@@ -112,6 +130,7 @@ class Layout extends Component {
                 </main>
 
                 <ErrorBar open={this.state.isError} message={this.state.error} />
+                <ConnectionSetup open={this.state.showSetupConnection} />
             </div>
         );
     }
