@@ -124,11 +124,20 @@ class NodeChart extends React.Component {
         this.setState({ currentSelection: results })
     }
 
+    stablize(e) {
+        console.log(e);
+    }
+
     render() {
         const { classes } = this.props;
         var graph = this.parseResults(this.props);
         var options = {
+            layout: {
+                hierarchical: true
+            },
+            improvedLayout: false,
             physics: {
+                enabled: true,
                 forceAtlas2Based: {
                     gravitationalConstant: -26,
                     centralGravity: 0.005,
@@ -136,11 +145,14 @@ class NodeChart extends React.Component {
                     springConstant: 0.18,
                     avoidOverlap: 1.5
                 },
-                maxVelocity: 146,
+                maxVelocity: 50,
                 solver: 'forceAtlas2Based',
-                timestep: 0.35,
+                timestep: 0.05,
+                layout: {
+                    improvedLayout: false
+                },
                 stabilization: {
-                    enabled: true,
+                    enabled: false,
                     iterations: 1000,
                     updateInterval: 25
                 }
@@ -151,7 +163,8 @@ class NodeChart extends React.Component {
         };
 
         var events = {
-            select: this.handleSelection
+            select: this.handleSelection,
+            stablized: this.stablize
         }
         return (
             <div className={classes.root}>
@@ -169,28 +182,6 @@ class NodeChart extends React.Component {
             </div>
         );
     }
-}
-
-function syntaxHighlight(json) {
-    if (typeof json != 'string') {
-        json = JSON.stringify(json, undefined, 2);
-    }
-    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-            } else {
-                cls = 'string';
-            }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
-        }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
 }
 
 NodeChart.propTypes = {
