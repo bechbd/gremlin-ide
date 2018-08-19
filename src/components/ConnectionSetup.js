@@ -8,6 +8,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { Checkbox } from '@material-ui/core';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { ipcRenderer } from 'electron';
+const settings = require('electron').remote.require('electron-settings');
 
 const styles = theme => ({
     root: {
@@ -20,21 +24,35 @@ const styles = theme => ({
 });
 
 class ConnectionSetup extends React.Component {
+
     constructor(props) {
         super(props);
-
         this.state = {
             open: false,
             serverName: "",
             serverPort: 8182,
             userName: "",
-            password: ""
+            password: "",
+            useSSL: false
         }
         this.handleClose = this.handleClose.bind(this);
+        this.saveThenClose = this.saveThenClose.bind(this);
         this.handleServerNameChanges = this.handleServerNameChanges.bind(this);
         this.handleServerPortChanges = this.handleServerPortChanges.bind(this);
         this.handleUserNameChanges = this.handleUserNameChanges.bind(this);
         this.handlePasswordChanges = this.handlePasswordChanges.bind(this);
+        this.handleSSLChanges = this.handleSSLChanges.bind(this);
+        this.testConnection = this.testConnection.bind(this);
+    }
+
+    componentWillMount() {
+        this.setState({
+            serverName: settings.get("loginInfo.serverName"),
+            serverPort: settings.get("loginInfo.serverPort"),
+            userName: settings.get("loginInfo.userName"),
+            password: settings.get("loginInfo.password"),
+            useSSL: Boolean(settings.get("loginInfo.useSSL"))
+        })
     }
 
     componentWillReceiveProps(props) {
@@ -47,9 +65,31 @@ class ConnectionSetup extends React.Component {
         if (reason === 'clickaway') {
             return;
         }
-
         this.setState({ open: false });
     };
+
+    saveThenClose(event, reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+        settings.set("loginInfo", {
+            serverName: this.state.serverName,
+            serverPort: this.state.serverPort,
+            userName: this.state.userName,
+            password: this.state.password,
+            useSSL: Boolean(this.state.useSSL)
+        })
+        ipcRenderer.send("connection:newConnection");
+        this.handleClose();
+    };
+
+    testConnection() {
+        alert("Currently this is not hooked up");
+    }
+
+    handleSSLChanges(event) {
+        this.setState({ useSSL: event.currentTarget.checked })
+    }
 
     handleServerNameChanges(event) {
         this.setState({ serverName: event.currentTarget.value })
@@ -119,16 +159,20 @@ class ConnectionSetup extends React.Component {
                             value={this.state.password}
                             onChange={this.handlePasswordChanges}
                         />
+                        <FormControlLabel
+                            control={
+                                <Checkbox checked={this.state.useSSL} onChange={this.handleSSLChanges} />}
+                            label="Use SSL" />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleClose} color="primary">
+                        <Button onClick={this.testConnection} color="default" disabled={true}>
                             Test Connection
                         </Button>
-                        <Button onClick={this.handleClose} color="primary">
+                        <Button onClick={this.handleClose} color="default">
                             Cancel
                         </Button>
-                        <Button onClick={this.handleClose} color="primary">
-                            Connect
+                        <Button onClick={this.saveThenClose} color="primary">
+                            Save
                         </Button>
                     </DialogActions>
                 </Dialog>}

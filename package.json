@@ -35,11 +35,13 @@
   "dependencies": {
     "@material-ui/core": "^1.4.3",
     "@material-ui/icons": "^2.0.2",
-    "electron-store": "^2.0.0",
+    "electron-settings": "^3.2.0",
+    "electron-unhandled": "^1.1.0",
     "gremlin": "^2.7.0",
     "lodash": "^4.17.10",
     "react-graph-vis": "^1.0.2",
     "react-json-view": "^1.19.1",
-    "react-table": "^6.8.6"
+    "react-table": "^6.8.6",
+    "roboto-fontface": "^0.10.0"
   }
 }

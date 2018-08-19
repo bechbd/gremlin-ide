@@ -27,6 +27,8 @@ const styles = theme => ({
     },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
+        backgroundColor: "#444444",
+        color: "#cccccc"
     },
     drawerPaper: {
         position: 'relative',
@@ -94,7 +96,7 @@ class Layout extends Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <AppBar position="absolute" className={classes.appBar}>
+                <AppBar position="absolute" className={classes.appBar} color="inherit">
                     <Toolbar>
                         <img src={require('../assets/img/gremlin-character.png')} className={classes.gremlinIcon} />
                         <Typography variant="title" color="inherit" noWrap style={{ flex: 1 }}>

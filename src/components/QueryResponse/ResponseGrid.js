@@ -95,7 +95,9 @@ function parseResults(d, rows, columns) {
                             row[f] = d.properties[f].value;
                         }
                         else {
-                            row[f] = d.properties[f][0].value;
+                            if (d.properties[f][0] !== undefined) {
+                                row[f] = d.properties[f][0].value;
+                            }
                         }
                     });
                 }
