@@ -22,31 +22,33 @@ class NodeChart extends React.Component {
         let data = props.results;
         let nodes = [];
         let edges = [];
-        data = data.reduce((a, b) => a.concat(b), []);
-        data.forEach(element => {
-            if (element.id != undefined && element.label != undefined) {
-                let sigma = {};
-                sigma.id = element.id;
-                sigma.label = element.label;
-                if (element.inVLabel == undefined) {
-                    if (nodes.find((n) => { return n.id == sigma.id; }) == null) {
-                        nodes.push(sigma);
+        if (data !== null) {
+            data = data.reduce((a, b) => a.concat(b), []);
+            data.forEach(element => {
+                if (element.id != undefined && element.label != undefined) {
+                    let sigma = {};
+                    sigma.id = element.id;
+                    sigma.label = element.label + "(" + element.id + ")";
+                    if (element.inVLabel == undefined) {
+                        if (nodes.find((n) => { return n.id == sigma.id; }) == null) {
+                            nodes.push(sigma);
+                        }
+                    }
+                    else {
+                        sigma.to = element.inV;
+                        sigma.from = element.outV;
+
+                        if (edges.find((n) => { return n.id == sigma.id; }) == null) {
+                            edges.push(sigma);
+                        }
+
+                        //check to make sure the nodes exist for the in and out vertex
+                        this.addEdgeNode(nodes, element.inV, element.inVLabel);
+                        this.addEdgeNode(nodes, element.outV, element.outVLabel);
                     }
                 }
-                else {
-                    sigma.to = element.inV;
-                    sigma.from = element.outV;
-
-                    if (edges.find((n) => { return n.id == sigma.id; }) == null) {
-                        edges.push(sigma);
-                    }
-
-                    //check to make sure the nodes exist for the in and out vertex
-                    this.addEdgeNode(nodes, element.inV, element.inVLabel);
-                    this.addEdgeNode(nodes, element.outV, element.outVLabel);
-                }
-            }
-        });
+            });
+        }
         return {
             nodes: nodes,
             edges: edges

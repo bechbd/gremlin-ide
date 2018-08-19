@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ReactTable from "react-table"
+import _ from "lodash";
 
 
 const styles = theme => ({
@@ -23,27 +24,18 @@ class ResponseGrid extends React.Component {
         }
     }
 
-    componentWillReceiveProps(props) {
-        if (props !== this.props) {
-            var rows = [];
-            var _this = this;
-            if (props.results != null) {
-                parseResults(props.results, _this, rows);
-            }
-            _this.setState({ results: rows });
-        }
-    }
-
     render() {
         const { classes } = this.props;
-        var rows = [];
-        var data = parseResults(this.props, this, rows);
+        var data = { rows: [], columns: [] }
+        parseResults(this.props.results, data.rows, data.columns);
         return (
             <div className={classes.root}>
                 <ReactTable
-                    data={this.state.results}
-                    columns={this.state.columns}
+                    className="-striped -highlight"
+                    data={data.rows}
+                    columns={data.columns}
                     showPagination={false} showPageSizeOptions={false} minRows={1}
+                    noDataText="No Data Returned from Traversal"
                 />
             </div>
         );
@@ -56,56 +48,64 @@ ResponseGrid.propTypes = {
 
 export default withStyles(styles)(ResponseGrid);
 
-function parseResults(d, _this, rows) {
-    var rows = [];
-    var cols = []
-    var arr = [];
+function findColumnIndexById(cols, label) {
+    return _.findIndex(cols, (e) => { return e.id == label });
+}
 
-    if (d instanceof Array) {
-        d.forEach((r) => {
-            var results = parseResults(r, _this, rows);
-            rows.push(results.rows);
-            cols.push(results.columns);
-        });
-    } else {
-        var arr = [];
-        var cols = [];
-        var row = {};
-        Object.keys(d).forEach(function (k) {
-            if (_this.state.keys.indexOf(k) < 0) {
+function parseResults(d, rows, columns) {
+    var rows = rows || [];
+    var cols = columns || [];
+
+    if (d !== null) {
+        if (d instanceof Array) {
+            d.forEach((r) => {
+                parseResults(r, rows, cols);
+            });
+        } else {
+            //Get unique columns
+            Object.keys(d).forEach(function (k) {
+                if (findColumnIndexById(cols, k) == -1) {
+                    if (k != "properties") {
+                        var col = {
+                            accessor: k,
+                            id: k,
+                            Header: k
+                        };
+                        cols.push(col);
+                    }
+                    else {
+                        Object.keys(d.properties).forEach((f) => {
+                            if (findColumnIndexById(cols, f) == -1) {
+                                var col = {
+                                    accessor: f,
+                                    id: f,
+                                    Header: f
+                                };
+                                cols.push(col);
+                            }
+                        });
+                    }
+                }
+            });
+
+            var row = {};
+            //get row data
+            Object.keys(d).forEach(function (k) {
                 if (k != "properties") {
-                    var col = {
-                        accessor: k,
-                        id: k,
-                        Header: k
-                    };
-                    cols.push(col);
-                    arr.push(k);
                     row[k] = d[k];
                 }
                 else {
                     Object.keys(d.properties).forEach((f) => {
-                        if (_this.state.keys.indexOf(f) < 0) {
-                            var col = {
-                                accessor: f,
-                                id: f,
-                                Header: f
-                            };
-                            cols.push(col);
-                            arr.push(f);
-                            if (d.properties[f].value != undefined) {
-                                row[f] = d.properties[f].value;
-                            }
-                            else {
-                                row[f] = d.properties[f][0].value;
-                            }
+                        if (d.properties[f].value != undefined) {
+                            row[f] = d.properties[f].value;
+                        }
+                        else {
+                            row[f] = d.properties[f][0].value;
                         }
                     });
                 }
-            }
-        });
-        rows.push(row);
-        //_this.setState({ columns: cols });
-        return { rows: rows, columns: cols };
+            });
+            rows.push(row);
+        }
     }
 }

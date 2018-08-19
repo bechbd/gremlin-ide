@@ -34,7 +34,9 @@
   },
   "dependencies": {
     "@material-ui/core": "^1.4.3",
+    "electron-store": "^2.0.0",
     "gremlin": "^2.7.0",
+    "lodash": "^4.17.10",
     "react-graph-vis": "^1.0.2",
     "react-json-view": "^1.19.1",
     "react-table": "^6.8.6"
