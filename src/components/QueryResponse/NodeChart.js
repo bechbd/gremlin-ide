@@ -2,20 +2,45 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Graph from 'react-graph-vis';
+import _ from "lodash";
+import ReactJson from 'react-json-view';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
     root: {
         height: "calc(100vh - 390px)",
         overflow: "auto",
         backgroundColor: theme.palette.background.paper,
-        border: "solid 1px #cccccc"
+        border: "solid 1px #cccccc",
+        display: "flex"
     },
+    chart: {
+        flex: "1 1 auto"
+    },
+    panel: {
+        width: "25%",
+        overflow: "auto",
+        borderLeft: "solid 1px #cccccc",
+        float: "right",
+        paddingLeft: "10px"
+    }
 });
+
+const colors = ["#e6194b", "#3cb44b", "#ffe119", "#0082c8", "#f58231",
+    "#911eb4", "#46f0f0", "#f032e6", "#d2f53c", "#fabebe",
+    "#008080", "#e6beff", "#aa6e28", "#fffac8", "#800000",
+    "#aaffc3", "#808000", "#ffd8b1", "#000080", "#808080"
+];
 
 class NodeChart extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            currentSelection: null
+        }
+        this.handleSelection = this.handleSelection.bind(this);
     }
 
     parseResults(props) {
@@ -28,7 +53,8 @@ class NodeChart extends React.Component {
                 if (element.id != undefined && element.label != undefined) {
                     let sigma = {};
                     sigma.id = element.id;
-                    sigma.label = element.label + "(" + element.id + ")";
+                    sigma.label = element.label;
+                    sigma.rawData = element;
                     if (element.inVLabel == undefined) {
                         if (nodes.find((n) => { return n.id == sigma.id; }) == null) {
                             nodes.push(sigma);
@@ -49,10 +75,24 @@ class NodeChart extends React.Component {
                 }
             });
         }
+        var distinctLabels = this.unique(nodes, "label").map(a => a.label);
+
+        nodes.forEach((n) => {
+            var index = distinctLabels.indexOf(n.label);
+            if (index >= 20) {
+                index = index - 20;
+            }
+            n.color = colors[index];
+        })
+
         return {
             nodes: nodes,
             edges: edges
         };
+    }
+
+    unique(array, propertyName) {
+        return array.filter((e, i) => array.findIndex(a => a[propertyName] === e[propertyName]) === i);
     }
 
     addEdgeNode(nodes, id, label) {
@@ -64,29 +104,93 @@ class NodeChart extends React.Component {
         }
     }
 
+    handleSelection(event) {
+        let graph = this.parseResults(this.props);
+        var results = [];
+        event.nodes.forEach((n) => {
+            graph.nodes.forEach((o) => {
+                if (o.id === n) {
+                    results.push(o.rawData);
+                }
+            });
+        });
+        event.edges.forEach((n) => {
+            graph.edges.forEach((o) => {
+                if (o.id === n) {
+                    results.push(o.rawData);
+                }
+            });
+        });
+        this.setState({ currentSelection: results })
+    }
+
     render() {
         const { classes } = this.props;
         var graph = this.parseResults(this.props);
         var options = {
-            layout: {
-                hierarchical: true
+            physics: {
+                forceAtlas2Based: {
+                    gravitationalConstant: -26,
+                    centralGravity: 0.005,
+                    springLength: 230,
+                    springConstant: 0.18,
+                    avoidOverlap: 1.5
+                },
+                maxVelocity: 146,
+                solver: 'forceAtlas2Based',
+                timestep: 0.35,
+                stabilization: {
+                    enabled: true,
+                    iterations: 1000,
+                    updateInterval: 25
+                }
             },
             edges: {
-                color: "#000000"
+                enabled: true
             }
         };
 
         var events = {
-            select: function (event) {
-                var { nodes, edges } = event;
-            }
+            select: this.handleSelection
         }
         return (
             <div className={classes.root}>
-                <Graph graph={graph} options={options} events={events} />
+                <div className={classes.chart}>
+                    <Graph graph={graph} options={options} events={events} />
+                </div>
+                <div className={classes.panel}>
+                    <Typography variant="subheading" color="inherit" noWrap style={{ flex: 1 }}>
+                        Selection Details
+                        </Typography>
+                    {this.state.currentSelection !== null && this.state.currentSelection !== undefined &&
+                        <ReactJson src={this.state.currentSelection} name={null} displayDataTypes={false} />
+                    }
+                </div>
             </div>
         );
     }
+}
+
+function syntaxHighlight(json) {
+    if (typeof json != 'string') {
+        json = JSON.stringify(json, undefined, 2);
+    }
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
 }
 
 NodeChart.propTypes = {
