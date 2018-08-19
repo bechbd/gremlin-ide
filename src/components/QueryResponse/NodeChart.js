@@ -22,7 +22,7 @@ class NodeChart extends React.Component {
         let data = props.results;
         let nodes = [];
         let edges = [];
-        if (data !== null) {
+        if (data !== null && data !== undefined) {
             data = data.reduce((a, b) => a.concat(b), []);
             data.forEach(element => {
                 if (element.id != undefined && element.label != undefined) {

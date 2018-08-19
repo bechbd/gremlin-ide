@@ -66,9 +66,9 @@ class QueryTabs extends React.Component {
                         <Tab label="Node Chart" href="#basic-tabs" />
                     </Tabs>
                 </AppBar>
-                {this.state.results !== null && value === 0 && <TabContainer className={classes.container}><ResponseGrid results={this.state.results} /></TabContainer>}
-                {this.state.results !== null && value === 1 && <TabContainer className={classes.container}><ResponseJson results={this.state.results} /></TabContainer>}
-                {this.state.results !== null && value === 2 && <TabContainer className={classes.container}><NodeChart results={this.state.results} /></TabContainer>}
+                {this.state.results !== null && this.state.results !== undefined && value === 0 && <TabContainer className={classes.container}><ResponseGrid results={this.state.results} /></TabContainer>}
+                {this.state.results !== null && this.state.results !== undefined && value === 1 && <TabContainer className={classes.container}><ResponseJson results={this.state.results} /></TabContainer>}
+                {this.state.results !== null && this.state.results !== undefined && value === 2 && <TabContainer className={classes.container}><NodeChart results={this.state.results} /></TabContainer>}
             </div>
         );
     }

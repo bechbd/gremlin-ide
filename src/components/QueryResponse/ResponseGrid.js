@@ -17,11 +17,6 @@ class ResponseGrid extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            columns: [],
-            keys: [],
-            results: []
-        }
     }
 
     render() {
@@ -35,7 +30,7 @@ class ResponseGrid extends React.Component {
                     data={data.rows}
                     columns={data.columns}
                     showPagination={false} showPageSizeOptions={false} minRows={1}
-                    noDataText="No Data Returned from Traversal"
+                    noDataText=""
                 />
             </div>
         );
@@ -56,7 +51,7 @@ function parseResults(d, rows, columns) {
     var rows = rows || [];
     var cols = columns || [];
 
-    if (d !== null) {
+    if (d !== null && d !== undefined) {
         if (d instanceof Array) {
             d.forEach((r) => {
                 parseResults(r, rows, cols);

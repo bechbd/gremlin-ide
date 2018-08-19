@@ -9,7 +9,8 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import QueryTabs from './QueryResponse/QueryTabs'
+import QueryTabs from './QueryResponse/QueryTabs';
+import ErrorBar from './QueryResponse/ErrorBar';
 const { ipcRenderer } = require('electron')
 
 const drawerWidth = 240;
@@ -50,7 +51,9 @@ class Layout extends Component {
         super();
         this.state = {
             query: "g.V()",
-            results: null
+            results: null,
+            isError: false,
+            error: null
         }
         this.handleChanges = this.handleChanges.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -69,7 +72,7 @@ class Layout extends Component {
 
     handleSubmit(event) {
         var result = ipcRenderer.sendSync("query:execute", this.state.query);
-        this.setState({ results: result })
+        this.setState({ results: result.results, isError: result.isError, error: result.error })
     }
 
     render() {
@@ -83,16 +86,6 @@ class Layout extends Component {
                         </Typography>
                     </Toolbar>
                 </AppBar>
-                <Drawer
-                    variant="permanent"
-                    classes={{
-                        paper: classes.drawerPaper,
-                    }}
-                >
-                    <div className={classes.toolbar} />
-                    <List>Query</List>
-                    <List>Connections</List>
-                </Drawer>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
                     <div className={classes.queryBox}>
@@ -117,6 +110,8 @@ class Layout extends Component {
                     </div>
                     <QueryTabs className={classes.queryTabs} results={this.state.results} />
                 </main>
+
+                <ErrorBar open={this.state.isError} message={this.state.error} />
             </div>
         );
     }
