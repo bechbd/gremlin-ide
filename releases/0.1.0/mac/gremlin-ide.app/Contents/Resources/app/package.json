@@ -1,0 +1,49 @@
+{
+  "name": "gremlin-ide",
+  "version": "0.1.0",
+  "description": "A development IDE for Tinkerpop enabled graph databases",
+  "author": "Dave Bechberger",
+  "homepage": "http://practicalgraph.com",
+  "license": "MIT",
+  "main": "main.js",
+  "scripts": {
+    "prod": "webpack --config webpack.build.config.js && electron --noDevServer .",
+    "dev": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode=development",
+    "build": "webpack --config webpack.build.config.js",
+    "package": "webpack --config webpack.build.config.js",
+    "postpackage": "electron-packager ./ --out=./builds --overwrite --platform=darwin --arch=x64 --icon=./src/assets/icons/mac/gremlin.icns --prune=true",
+    "package-mac": "electron-packager ./ --out=./builds --overwrite --platform=darwin --arch=x64 --icon=./src/assets/icons/mac/gremlin.icns --prune=true && electron-installer-dmg ./builds/Electron 'Gremlin IDE' app-darwin-x64/Electron tutorial app.app 'Gremlin IDE'"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-react": "^6.24.1",
+    "babili-webpack-plugin": "^0.1.2",
+    "css-loader": "^1.0.0",
+    "electron": "^2.0.6",
+    "electron-installer-dmg": "^2.0.0",
+    "electron-packager": "^12.1.0",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.4.1",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.16.4",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5"
+  },
+  "dependencies": {
+    "@material-ui/core": "^1.4.3",
+    "@material-ui/icons": "^2.0.2",
+    "electron-settings": "^3.2.0",
+    "electron-unhandled": "^1.1.0",
+    "gremlin": "^2.7.0",
+    "lodash": "^4.17.10",
+    "react-graph-vis": "^1.0.2",
+    "react-json-view": "^1.19.1",
+    "react-table": "^6.8.6",
+    "roboto-fontface": "^0.10.0"
+  }
+}
