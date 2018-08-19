@@ -3,16 +3,14 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import QueryTabs from './QueryResponse/QueryTabs';
 import ErrorBar from './QueryResponse/ErrorBar';
 import MainMenu from './MainMenu';
 import ConnectionSetup from './ConnectionSetup';
+import QueryBox from './QueryResponse/QueryBox';
 const { ipcRenderer } = require('electron')
-
+const appVersion = window.require('electron').remote.app.getVersion();
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -31,9 +29,6 @@ const styles = theme => ({
     drawerPaper: {
         position: 'relative',
         width: drawerWidth,
-    },
-    queryBox: {
-        flex: "0 1 184px"
     },
     queryTabs: {
     },
@@ -65,21 +60,15 @@ class Layout extends Component {
             isError: false,
             error: null,
             showSetupConnection: false,
+            runningQuery: false,
         }
         this.handleChanges = this.handleChanges.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleKeyPress = this.handleKeyPress.bind(this);
         this.onMenuSelected = this.onMenuSelected.bind(this);
     }
 
     handleChanges(event) {
         this.setState({ query: event.currentTarget.value })
-    }
-
-    handleKeyPress(e) {
-        if (e.key == "Enter" && e.shiftKey) {
-            this.handleSubmit(e);
-        }
     }
 
     handleSubmit(event) {
@@ -99,7 +88,7 @@ class Layout extends Component {
                     <Toolbar>
                         <img src={require('../assets/img/gremlin-character.png')} className={classes.gremlinIcon} />
                         <Typography variant="title" color="inherit" noWrap style={{ flex: 1 }}>
-                            Gremlin IDE
+                            Gremlin IDE {appVersion}
                         </Typography>
 
                         <MainMenu onSelected={this.onMenuSelected} />
@@ -107,26 +96,7 @@ class Layout extends Component {
                 </AppBar>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
-                    <div className={classes.queryBox}>
-                        <TextField
-                            id="multiline-static"
-                            label="Query"
-                            multiline
-                            rows="4"
-                            defaultValue="g.V()"
-                            className={classes.textField}
-                            margin="normal"
-                            fullWidth
-                            onChange={this.handleChanges}
-                            onKeyPress={this.handleKeyPress}
-                        />
-                        <Button variant="contained" color="primary" className={classes.button} onClick={this.handleSubmit}>
-                            Submit
-                    </Button>
-                        <br />
-                        <br />
-                        <Divider />
-                    </div>
+                    <QueryBox loading={this.state.runningQuery} handleChanges={this.handleChanges} handleSubmit={this.handleSubmit} />
                     <QueryTabs className={classes.queryTabs} results={this.state.results} />
                 </main>
 
