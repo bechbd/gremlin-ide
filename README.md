@@ -7,11 +7,14 @@ To run Gremlin IDE you need to click on the gremlin-ide application that you hav
 ### Configuring Connections
 In order to configure the connection to the database you need to press the hamburger menu in the top right of the window.  This will bring you up a window where you are able to enter the appropriate parameters and click Save.  This will then be persisted between sessions.
 
+![alt text](https://github.com/practicalgraph/gremlin-ide/blob/master/doc/img/setup_connections.png "Connection Configuration")
 
 Note: Currently the error handling on incorrect database parameters does not exist so these will cause the system to crash.  
 
 ### Running Queries
 In order to run Gremlin queries you need to type them into the provided textbox and either hit the `Submit` button or hit `Shift + Enter` while in the query box.  This will then fire a query to the server, return the results and display them in the provided areas.
+
+![alt text](https://github.com/practicalgraph/gremlin-ide/blob/master/doc/img/query.png "Query")
 
 ## Known Issues
 * Currently Error Handling is only minimal so many things may cause this to freeze
