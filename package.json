@@ -12,7 +12,9 @@
     "build": "webpack --config webpack.build.config.js",
     "package": "webpack --config webpack.build.config.js",
     "postpackage": "electron-packager ./ --out=./builds --overwrite --platform=darwin --arch=x64 --icon=./src/assets/icons/mac/gremlin.icns --prune=true",
-    "package-mac": "electron-packager ./ --out=./builds --overwrite --platform=darwin --arch=x64 --icon=./src/assets/icons/mac/gremlin.icns --prune=true"
+    "package-mac": "electron-packager ./ --out=./builds --overwrite --platform=darwin --arch=x64 --icon=./src/assets/icons/mac/gremlin.icns --prune=true",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --pd ./builds/gremlin-ide-darwin-x64"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -21,6 +23,7 @@
     "babili-webpack-plugin": "^0.1.2",
     "css-loader": "^1.0.0",
     "electron": "^2.0.6",
+    "electron-builder": "^20.28.1",
     "electron-installer-dmg": "^2.0.0",
     "electron-packager": "^12.1.0",
     "extract-text-webpack-plugin": "^3.0.2",
@@ -45,5 +48,11 @@
     "react-json-view": "^1.19.1",
     "react-table": "^6.8.6",
     "roboto-fontface": "^0.10.0"
+  },
+  "build": {
+    "appId": "com.practicalgraph.gremlin-ide",
+    "win": {
+      "icon": "https://github.com/practicalgraph/gremlin-ide/blob/master/src/assets/icons/win/gremlin.ico"
+    }
   }
 }
