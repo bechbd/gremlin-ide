@@ -38,7 +38,8 @@ class NodeChart extends React.Component {
         super(props);
 
         this.state = {
-            currentSelection: null
+            currentSelection: null,
+            error: false
         }
         this.handleSelection = this.handleSelection.bind(this);
     }
@@ -50,27 +51,30 @@ class NodeChart extends React.Component {
         if (data !== null && data !== undefined) {
             data = data.reduce((a, b) => a.concat(b), []);
             data.forEach(element => {
-                if (element.id != undefined && element.label != undefined) {
-                    let sigma = {};
-                    sigma.id = element.id;
-                    sigma.label = element.label;
-                    sigma.rawData = element;
-                    if (element.inVLabel == undefined) {
-                        if (nodes.find((n) => { return n.id == sigma.id; }) == null) {
-                            nodes.push(sigma);
-                        }
-                    }
-                    else {
-                        sigma.to = element.inV;
-                        sigma.from = element.outV;
 
-                        if (edges.find((n) => { return n.id == sigma.id; }) == null) {
-                            edges.push(sigma);
+                if (!data.isPath) {
+                    if (element.id != undefined && element.label != undefined) {
+                        let sigma = {};
+                        sigma.id = element.id;
+                        sigma.label = element.label;
+                        sigma.rawData = element;
+                        if (element.inVLabel == undefined) {
+                            if (nodes.find((n) => { return n.id == sigma.id; }) == null) {
+                                nodes.push(sigma);
+                            }
                         }
+                        else {
+                            sigma.to = element.inV;
+                            sigma.from = element.outV;
 
-                        //check to make sure the nodes exist for the in and out vertex
-                        this.addEdgeNode(nodes, element.inV, element.inVLabel);
-                        this.addEdgeNode(nodes, element.outV, element.outVLabel);
+                            if (edges.find((n) => { return n.id == sigma.id; }) == null) {
+                                edges.push(sigma);
+                            }
+
+                            //check to make sure the nodes exist for the in and out vertex
+                            this.addEdgeNode(nodes, element.inV, element.inVLabel);
+                            this.addEdgeNode(nodes, element.outV, element.outVLabel);
+                        }
                     }
                 }
             });
@@ -102,6 +106,11 @@ class NodeChart extends React.Component {
             node.label = label;
             nodes.push(node);
         }
+    }
+
+    componentDidCatch(error) {
+        console.log(error);
+        this.setState({ error: true });
     }
 
     handleSelection(event) {
@@ -166,21 +175,32 @@ class NodeChart extends React.Component {
             select: this.handleSelection,
             stablized: this.stablize
         }
-        return (
-            <div className={classes.root}>
-                <div className={classes.chart}>
-                    <Graph graph={graph} options={options} events={events} />
-                </div>
-                <div className={classes.panel}>
-                    <Typography variant="subheading" color="inherit" noWrap style={{ flex: 1 }}>
-                        Selection Details
+
+        if (this.state.error || graph.nodes.length == 0) {
+            return (
+                <div className={classes.root}>
+                    <Typography variant="body1" color="inherit" noWrap style={{ flex: 1 }}>
+                        No tablular data to display for this query
                         </Typography>
-                    {this.state.currentSelection !== null && this.state.currentSelection !== undefined &&
-                        <ReactJson src={this.state.currentSelection} name={null} displayDataTypes={false} />
-                    }
                 </div>
-            </div>
-        );
+            );
+        } else {
+            return (
+                <div className={classes.root}>
+                    <div className={classes.chart}>
+                        <Graph graph={graph} options={options} events={events} />
+                    </div>
+                    <div className={classes.panel}>
+                        <Typography variant="subheading" color="inherit" noWrap style={{ flex: 1 }}>
+                            Selection Details
+                        </Typography>
+                        {this.state.currentSelection !== null && this.state.currentSelection !== undefined &&
+                            <ReactJson src={this.state.currentSelection} name={null} displayDataTypes={false} />
+                        }
+                    </div>
+                </div>
+            )
+        };
     }
 }
 

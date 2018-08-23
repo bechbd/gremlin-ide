@@ -67,6 +67,7 @@ class Layout extends Component {
         this.onMenuSelected = this.onMenuSelected.bind(this);
     }
 
+
     handleChanges(event) {
         this.setState({ query: event.currentTarget.value })
     }
