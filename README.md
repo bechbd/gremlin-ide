@@ -36,3 +36,4 @@ This repo was cloned from this starter repo https://github.com/pbarbiero/basic-e
 
 ##### Production
 * Run `npm run package` to have webpack compile your application into `dist/bundle.js` and `dist/index.html`, and then an electron-packager run will be triggered for the current platform/arch, outputting to `builds/`
+* To build the DMG file for a Mac remove all the unneeded files from the builds folder and run `npm run dist`
