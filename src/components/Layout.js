@@ -47,7 +47,7 @@ const styles = theme => ({
         height: 48,
         padding: 5,
         marginLeft: 40
-    },
+    }
 });
 
 class Layout extends Component {
@@ -86,7 +86,9 @@ class Layout extends Component {
         return (
             <div className={classes.root}>
                 <AppBar position="absolute" className={classes.appBar} color="inherit">
-                    <Toolbar>
+                    <Toolbar style={{
+                        WebkitAppRegion: 'drag'
+                    }}>
                         <img src={require('../assets/img/gremlin-character.png')} className={classes.gremlinIcon} />
                         <Typography variant="title" color="inherit" noWrap style={{ flex: 1 }}>
                             Gremlin IDE {appVersion}
@@ -103,7 +105,7 @@ class Layout extends Component {
 
                 <ErrorBar open={this.state.isError} message={this.state.error} />
                 <ConnectionSetup open={this.state.showSetupConnection} />
-            </div>
+            </div >
         );
     }
 }
