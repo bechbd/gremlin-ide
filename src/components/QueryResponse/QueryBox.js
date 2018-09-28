@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Divider from '@material-ui/core/Divider';
+import MonacoEditor from 'react-monaco-editor';
 
 
 const styles = theme => ({
@@ -21,10 +22,21 @@ class QueryBox extends React.Component {
 
         this.state = {
             open: false,
-            loading: false
+            loading: false,
+            code: ""
         }
         this.handleKeyPress = this.handleKeyPress.bind(this);
     }
+
+    onChange(newValue, e) {
+        console.log('onChange', newValue, e); // eslint-disable-line no-console
+    }
+
+    editorDidMount(editor) {
+        // eslint-disable-next-line no-console
+        console.log('editorDidMount', editor, editor.getValue(), editor.getModel());
+    }
+
 
     componentWillReceiveProps(props) {
         if (props !== this.props) {
@@ -39,28 +51,24 @@ class QueryBox extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const code = this.state.code;
+        const options = {
+            selectOnLineNumbers: true,
+            roundedSelection: false,
+            readOnly: false,
+            cursorStyle: 'line',
+            automaticLayout: false,
+        };
         return (
-            <div className={classes.queryBox}>
-                <TextField
-                    id="multiline-static"
-                    label="Query"
-                    multiline
-                    rows="4"
-                    defaultValue="g.V()"
-                    className={classes.textField}
-                    margin="normal"
-                    fullWidth
-                    onChange={this.props.handleChanges}
-                    onKeyPress={this.handleKeyPress}
-                />
-                <Button variant="contained" color="primary" className={classes.button} onClick={this.props.handleSubmit}>
-                    Submit
-                </Button>
-                <br />
-                <br />
-                <Divider />
-            </div>
+            <MonacoEditor
+                width="100%"
+                height="10%"
+                language="groovy"
+                value={code}
+                options={options}
+                onChange={this.onChange}
+                editorDidMount={this.editorDidMount}
+            />
         );
     }
 }

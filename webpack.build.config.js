@@ -3,6 +3,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const BabiliPlugin = require('babili-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 // Config directories
 const SRC_DIR = path.resolve(__dirname, 'src');
@@ -21,15 +22,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.css$/,
-        use: [{
-          loader: MiniCssExtractPlugin.loader,
-        },
-          "css-loader"
-        ],
-        include: defaultInclude
-      },
-      {
         test: /\.jsx?$/,
         use: [{ loader: 'babel-loader' }],
         include: defaultInclude
@@ -43,12 +35,17 @@ module.exports = {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         use: [{ loader: 'file-loader?name=font/[name]__[hash:base64:5].[ext]' }],
         include: defaultInclude
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
       }
     ]
   },
   target: 'electron-renderer',
   plugins: [
     new HtmlWebpackPlugin(),
+    new MonacoWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: "bundle.css"
     }),
