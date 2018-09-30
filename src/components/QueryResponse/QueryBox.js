@@ -25,28 +25,27 @@ class QueryBox extends React.Component {
             loading: false,
             code: ""
         }
-        this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.editorDidMount = this.editorDidMount.bind(this);
     }
 
     onChange(newValue, e) {
         console.log('onChange', newValue, e); // eslint-disable-line no-console
+        this.setState({ code: newValue });
     }
 
     editorDidMount(editor) {
         // eslint-disable-next-line no-console
+        var _this = this;
         console.log('editorDidMount', editor, editor.getValue(), editor.getModel());
+        editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, function () {
+            _this.props.handleSubmit(_this.state.code);
+        });
     }
-
 
     componentWillReceiveProps(props) {
         if (props !== this.props) {
             this.setState({ open: props.open });
-        }
-    }
-
-    handleKeyPress(e) {
-        if (e.key == "Enter" && e.shiftKey) {
-            this.props.handleSubmit(e);
         }
     }
 
@@ -66,6 +65,7 @@ class QueryBox extends React.Component {
                 language="groovy"
                 value={code}
                 options={options}
+                onKeyUp={this.handleKeyPress}
                 onChange={this.onChange}
                 editorDidMount={this.editorDidMount}
             />

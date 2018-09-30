@@ -72,8 +72,8 @@ class Layout extends Component {
         this.setState({ query: event.currentTarget.value })
     }
 
-    handleSubmit(event) {
-        var result = ipcRenderer.sendSync("query:execute", this.state.query);
+    handleSubmit(query) {
+        var result = ipcRenderer.sendSync("query:execute", query);
         this.setState({ results: result.results, isError: result.isError, error: result.error, showSetupConnection: false })
     }
 
