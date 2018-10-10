@@ -10,7 +10,7 @@ import MonacoEditor from 'react-monaco-editor';
 const styles = theme => ({
     root: {
         backgroundColor: "#eeeeee",
-        height: "215px"
+        height: "210px"
     },
     queryBox: {
         height: "165px",
