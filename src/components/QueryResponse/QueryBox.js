@@ -9,11 +9,15 @@ import MonacoEditor from 'react-monaco-editor';
 
 const styles = theme => ({
     root: {
-        backgroundColor: "#d32f2f"
+        backgroundColor: "#eeeeee",
+        height: "215px"
     },
     queryBox: {
-        flex: "0 1 184px"
+        height: "165px",
     },
+    button: {
+        margin: "5px"
+    }
 });
 
 class QueryBox extends React.Component {
@@ -27,20 +31,23 @@ class QueryBox extends React.Component {
         }
         this.onChange = this.onChange.bind(this);
         this.editorDidMount = this.editorDidMount.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     onChange(newValue, e) {
-        console.log('onChange', newValue, e); // eslint-disable-line no-console
         this.setState({ code: newValue });
     }
 
     editorDidMount(editor) {
         // eslint-disable-next-line no-console
         var _this = this;
-        console.log('editorDidMount', editor, editor.getValue(), editor.getModel());
         editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, function () {
             _this.props.handleSubmit(_this.state.code);
         });
+    }
+
+    handleSubmit(e) {
+        this.props.handleSubmit(this.state.code);
     }
 
     componentWillReceiveProps(props) {
@@ -50,6 +57,7 @@ class QueryBox extends React.Component {
     }
 
     render() {
+        const { classes } = this.props;
         const code = this.state.code;
         const options = {
             selectOnLineNumbers: true,
@@ -59,16 +67,23 @@ class QueryBox extends React.Component {
             automaticLayout: false,
         };
         return (
-            <MonacoEditor
-                width="100%"
-                height="10%"
-                language="groovy"
-                value={code}
-                options={options}
-                onKeyUp={this.handleKeyPress}
-                onChange={this.onChange}
-                editorDidMount={this.editorDidMount}
-            />
+            <div className={classes.root}>
+                <div className={classes.queryBox}>
+                    <MonacoEditor
+                        width="100%"
+                        height="100%"
+                        language="groovy"
+                        value={code}
+                        options={options}
+                        onKeyUp={this.handleKeyPress}
+                        onChange={this.onChange}
+                        editorDidMount={this.editorDidMount}
+                    />
+                </div>
+                <Button variant="contained" color="primary" className={classes.button} onClick={this.handleSubmit}>
+                    Submit
+                </Button>
+            </div>
         );
     }
 }
