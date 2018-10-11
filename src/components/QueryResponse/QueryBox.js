@@ -4,15 +4,20 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Divider from '@material-ui/core/Divider';
+import MonacoEditor from 'react-monaco-editor';
 
 
 const styles = theme => ({
     root: {
-        backgroundColor: "#d32f2f"
+        backgroundColor: "#eeeeee",
+        height: "210px"
     },
     queryBox: {
-        flex: "0 1 184px"
+        height: "165px",
     },
+    button: {
+        margin: "5px"
+    }
 });
 
 class QueryBox extends React.Component {
@@ -21,9 +26,28 @@ class QueryBox extends React.Component {
 
         this.state = {
             open: false,
-            loading: false
+            loading: false,
+            code: ""
         }
-        this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.editorDidMount = this.editorDidMount.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    onChange(newValue, e) {
+        this.setState({ code: newValue });
+    }
+
+    editorDidMount(editor) {
+        // eslint-disable-next-line no-console
+        var _this = this;
+        editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, function () {
+            _this.props.handleSubmit(_this.state.code);
+        });
+    }
+
+    handleSubmit(e) {
+        this.props.handleSubmit(this.state.code);
     }
 
     componentWillReceiveProps(props) {
@@ -32,34 +56,33 @@ class QueryBox extends React.Component {
         }
     }
 
-    handleKeyPress(e) {
-        if (e.key == "Enter" && e.shiftKey) {
-            this.props.handleSubmit(e);
-        }
-    }
-
     render() {
         const { classes } = this.props;
+        const code = this.state.code;
+        const options = {
+            selectOnLineNumbers: true,
+            roundedSelection: false,
+            readOnly: false,
+            cursorStyle: 'line',
+            automaticLayout: false,
+        };
         return (
-            <div className={classes.queryBox}>
-                <TextField
-                    id="multiline-static"
-                    label="Query"
-                    multiline
-                    rows="4"
-                    defaultValue="g.V()"
-                    className={classes.textField}
-                    margin="normal"
-                    fullWidth
-                    onChange={this.props.handleChanges}
-                    onKeyPress={this.handleKeyPress}
-                />
-                <Button variant="contained" color="primary" className={classes.button} onClick={this.props.handleSubmit}>
+            <div className={classes.root}>
+                <div className={classes.queryBox}>
+                    <MonacoEditor
+                        width="100%"
+                        height="100%"
+                        language="groovy"
+                        value={code}
+                        options={options}
+                        onKeyUp={this.handleKeyPress}
+                        onChange={this.onChange}
+                        editorDidMount={this.editorDidMount}
+                    />
+                </div>
+                <Button variant="contained" color="primary" className={classes.button} onClick={this.handleSubmit}>
                     Submit
                 </Button>
-                <br />
-                <br />
-                <Divider />
             </div>
         );
     }

@@ -1,6 +1,6 @@
 {
   "name": "gremlin-ide",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A development IDE for Tinkerpop enabled graph databases",
   "author": "Dave Bechberger",
   "homepage": "http://practicalgraph.com",
@@ -9,7 +9,7 @@
   "scripts": {
     "prod": "webpack --config webpack.build.config.js && electron --noDevServer .",
     "dev": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode=development",
-    "build": "webpack --config webpack.build.config.js",
+    "build": "webpack --config webpack.build.config.js ",
     "package": "webpack --config webpack.build.config.js",
     "postpackage": "electron-packager ./ --out=./builds --overwrite --platform=darwin --arch=x64 --icon=./src/assets/icons/mac/gremlin.icns --prune=true",
     "package-mac": "electron-packager ./ --out=./builds --overwrite --platform=darwin --arch=x64 --icon=./src/assets/icons/mac/gremlin.icns --prune=true",
@@ -34,7 +34,7 @@
     "react-dom": "^16.4.2",
     "style-loader": "^0.21.0",
     "webpack": "^4.16.4",
-    "webpack-cli": "^3.1.0",
+    "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.5"
   },
   "dependencies": {
@@ -44,8 +44,10 @@
     "electron-unhandled": "^1.1.0",
     "gremlin": "^2.7.0",
     "lodash": "^4.17.10",
+    "monaco-editor-webpack-plugin": "^1.5.4",
     "react-graph-vis": "^1.0.2",
     "react-json-view": "^1.19.1",
+    "react-monaco-editor": "^0.18.0",
     "react-table": "^6.8.6",
     "roboto-fontface": "^0.10.0"
   },

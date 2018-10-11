@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { spawn } = require('child_process');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 // Config directories
 const SRC_DIR = path.resolve(__dirname, 'src');
@@ -20,11 +21,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.css$/,
-        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
-        include: defaultInclude
-      },
-      {
         test: /\.jsx?$/,
         use: [{ loader: 'babel-loader' }],
         include: defaultInclude
@@ -38,12 +34,17 @@ module.exports = {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         use: [{ loader: 'file-loader?name=font/[name]__[hash:base64:5].[ext]' }],
         include: defaultInclude
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
       }
     ]
   },
   target: 'electron-renderer',
   plugins: [
     new HtmlWebpackPlugin(),
+    new MonacoWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development')
     })
