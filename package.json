@@ -1,6 +1,6 @@
 {
   "name": "gremlin-ide",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A development IDE for Tinkerpop enabled graph databases",
   "author": "Dave Bechberger",
   "homepage": "http://practicalgraph.com",
@@ -9,7 +9,7 @@
   "scripts": {
     "prod": "webpack --config webpack.build.config.js && electron --noDevServer .",
     "dev": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode=development",
-    "build": "webpack --config webpack.build.config.js",
+    "build": "webpack --config webpack.build.config.js ",
     "package": "webpack --config webpack.build.config.js",
     "postpackage": "electron-packager ./ --out=./builds --overwrite --platform=darwin --arch=x64 --icon=./src/assets/icons/mac/gremlin.icns --prune=true",
     "package-mac": "electron-packager ./ --out=./builds --overwrite --platform=darwin --arch=x64 --icon=./src/assets/icons/mac/gremlin.icns --prune=true",

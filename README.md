@@ -29,11 +29,11 @@ Please feel free to file any issues you may find in this repo, or better yet fix
 This repo was cloned from this starter repo https://github.com/pbarbiero/basic-electron-react-boilerplate
 
 ### To get started:
-* Run `npm install`
+* Run `yarn install`
 
 ##### Development
-* Run `npm run dev` to start webpack-dev-server. Electron will launch automatically after compilation.
+* Run `yarn run dev` to start webpack-dev-server. Electron will launch automatically after compilation.
 
 ##### Production
-* Run `npm run package` to have webpack compile your application into `dist/bundle.js` and `dist/index.html`, and then an electron-packager run will be triggered for the current platform/arch, outputting to `builds/`
-* To build the DMG file for a Mac remove all the unneeded files from the builds folder and run `npm run dist`
+* Run `yarn run package` to have webpack compile your application into `dist/bundle.js` and `dist/index.html`, and then an electron-packager run will be triggered for the current platform/arch, outputting to `builds/`
+* To build the DMG file for a Mac remove all the unneeded files from the builds folder and run `yarn run dist`
