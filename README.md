@@ -1,5 +1,5 @@
 # Gremlin IDE
-This application is a very basic development IDE for ![alt text](http://tinkerpop.apache.org/ "Apache Tinkerpop") Enabled databases built using Electron and React.  With this tool you are able to perform Gremlin queries and have the data returned and displayed in one of three ways.  You are able to see it as a table, the JSON, or as a node chart built on top of http://visjs.org/.  This was my first attempt at a React and Electron App so any feedback you may have on how to improve it would be appreciated.
+This application is a very basic development IDE for Apache Tinkerpop (http://tinkerpop.apache.org/) Enabled databases built using Electron and React.  With this tool you are able to perform Gremlin queries and have the data returned and displayed in one of three ways.  You are able to see it as a table, the JSON, or as a node chart built on top of http://visjs.org/.  This was my first attempt at a React and Electron App so any feedback you may have on how to improve it would be appreciated.
 
 ## Usage
 To run Gremlin IDE you need to click on the gremlin-ide application that you have downloaded.  
