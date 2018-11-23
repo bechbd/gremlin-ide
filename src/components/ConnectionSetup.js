@@ -33,6 +33,7 @@ class ConnectionSetup extends React.Component {
             serverPort: 8182,
             userName: "",
             password: "",
+            opProcessor: "",
             useSSL: false
         }
         this.handleClose = this.handleClose.bind(this);
@@ -43,6 +44,7 @@ class ConnectionSetup extends React.Component {
         this.handlePasswordChanges = this.handlePasswordChanges.bind(this);
         this.handleSSLChanges = this.handleSSLChanges.bind(this);
         this.testConnection = this.testConnection.bind(this);
+        this.handleOpProcessorChanges = this.handleOpProcessorChanges.bind(this);
     }
 
     componentWillMount() {
@@ -51,6 +53,7 @@ class ConnectionSetup extends React.Component {
             serverPort: settings.get("loginInfo.serverPort"),
             userName: settings.get("loginInfo.userName"),
             password: settings.get("loginInfo.password"),
+            opProcessor: settings.get("loginInfo.opProcessor"),
             useSSL: Boolean(settings.get("loginInfo.useSSL"))
         })
     }
@@ -77,6 +80,7 @@ class ConnectionSetup extends React.Component {
             serverPort: this.state.serverPort,
             userName: this.state.userName,
             password: this.state.password,
+            opProcessor: this.state.opProcessor,
             useSSL: Boolean(this.state.useSSL)
         })
         ipcRenderer.send("connection:newConnection");
@@ -105,6 +109,10 @@ class ConnectionSetup extends React.Component {
 
     handlePasswordChanges(event) {
         this.setState({ password: event.currentTarget.value })
+    }
+
+    handleOpProcessorChanges(event) {
+        this.setState({ opProcessor: event.currentTarget.value })
     }
 
     render() {
@@ -158,6 +166,15 @@ class ConnectionSetup extends React.Component {
                             fullWidth
                             value={this.state.password}
                             onChange={this.handlePasswordChanges}
+                        />
+                        <TextField
+                            margin="normal"
+                            id="opProcessor"
+                            label="Op Processor"
+                            type="text"
+                            fullWidth
+                            value={this.state.opProcessor}
+                            onChange={this.handleOpProcessorChanges}
                         />
                         <FormControlLabel
                             control={
