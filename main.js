@@ -77,6 +77,7 @@ function createWindow() {
       serverPort: 8182,
       userName: "",
       password: "",
+      opProcessor: "",
       useSSL: false
     };
     settings.set("loginInfo", setting);
@@ -110,7 +111,7 @@ app.on('activate', () => {
 
 ipc.on('query:execute', (e, query) => {
   client = Gremlin.createClient(settings.get("loginInfo.serverPort"), settings.get("loginInfo.serverName"),
-    { ssl: settings.get("loginInfo.useSSL"), user: settings.get("loginInfo.userName"), password: settings.get("loginInfo.password") });
+    { ssl: settings.get("loginInfo.useSSL"), user: settings.get("loginInfo.userName"), password: settings.get("loginInfo.password"), processor: settings.get("loginInfo.opProcessor") || ""});
   if (client == null) {
     client = connectToDatabase();
   }
@@ -132,7 +133,7 @@ ipc.on('connection:newConnection', (e) => {
 
 function connectToDatabase(loginInfo) {
   console.log("connectToDatabase");
-  const db = Gremlin.createClient(loginInfo.serverPort, loginInfo.serverName, { ssl: loginInfo.useSSL, user: loginInfo.userName, password: loginInfo.password });
+  const db = Gremlin.createClient(loginInfo.serverPort, loginInfo.serverName, { ssl: loginInfo.useSSL, user: loginInfo.userName, password: loginInfo.password, processor: loginInfo.opProcessor || ""});
   return db;
 }
 
